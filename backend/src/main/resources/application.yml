@@ -1,0 +1,41 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: tonkho-backend
+  datasource:
+    # Railway tu cap cac bien MYSQLHOST, MYSQLPORT, MYSQLDATABASE, MYSQLUSER, MYSQLPASSWORD
+    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:longwaits_inventory}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh&characterEncoding=UTF-8&createDatabaseIfNotExist=true
+    username: ${MYSQLUSER:root}
+    password: ${MYSQLPASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Ho_Chi_Minh
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 25MB
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+
+app:
+  jwt:
+    # Tren Railway dat bien JWT_SECRET la mot chuoi ngau nhien dai it nhat 32 ky tu
+    secret: ${JWT_SECRET:doi-chuoi-bi-mat-nay-khi-trien-khai-longwaits-tonkho-2026}
+    expiration-hours: ${JWT_EXPIRATION_HOURS:12}
+  cors:
+    # Danh sach domain frontend, cach nhau boi dau phay. Vi du: https://tonkho.vercel.app
+    allowed-origins: ${FRONTEND_URL:http://localhost:5173}
+  upload-dir: ${UPLOAD_DIR:./uploads}
+  seed:
+    enabled: ${SEED_DATA:true}
+    password: ${SEED_PASSWORD:LongWaits@2026}

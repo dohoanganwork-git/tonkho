@@ -1,0 +1,38 @@
+# Chay thu toan bo he thong tren may ca nhan: docker compose up --build
+# Backend: http://localhost:8080 · MySQL: localhost:3306 (root / longwaits)
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: longwaits
+      MYSQL_DATABASE: longwaits_inventory
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-plongwaits"]
+      interval: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MYSQLHOST: mysql
+      MYSQLPORT: 3306
+      MYSQLDATABASE: longwaits_inventory
+      MYSQLUSER: root
+      MYSQLPASSWORD: longwaits
+      FRONTEND_URL: http://localhost:5173
+      JWT_SECRET: chuoi-bi-mat-chi-dung-khi-chay-thu-tren-may-ca-nhan
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/data/uploads
+
+volumes:
+  mysql-data:
+  uploads:
